@@ -8,7 +8,7 @@ import java.util.ArrayList;
 class App {
     public static List<Map<String, String>> findWhere(List<Map<String, String>> books, Map<String, String> where) {
         List<Map<String, String>> filteredBooks = new ArrayList<>();
-        MatchesCount counter = ((map, key, value) -> map.get(key).equals(value) ? 1 : 0);
+        MatchesCount counter = ((map, key, whereValue) -> map.get(key).equals(whereValue) ? 1 : 0);
         books.forEach(x -> {
             int check = 0;
             for (Map.Entry<String, String> kv : where.entrySet()) {
