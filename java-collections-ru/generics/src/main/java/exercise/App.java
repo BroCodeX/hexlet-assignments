@@ -6,8 +6,8 @@ import java.util.ArrayList;
 
 // BEGIN
 class App {
-    public static List<Map<String, String>> findWhere(List<Map<String, String>> books, Map<String, String> where) {
-        List<Map<String, String>> filteredBooks = new ArrayList<>();
+    public static <T extends Map<String, String>> List<T> findWhere(List<T> books, T where) {
+        List<T> filteredBooks = new ArrayList<>();
         MatchesCount counter = ((map, key, whereValue) -> map.get(key).equals(whereValue) ? 1 : 0);
         books.forEach(x -> {
             int check = 0;
@@ -21,7 +21,7 @@ class App {
 }
 
 @FunctionalInterface
-interface MatchesCount {
-    int apply (Map<String, String> x, String whereKey, String whereValue);
+interface MatchesCount <T> {
+    int apply (Map<T, T> map, T whereKey, T whereValue);
 }
 //END
