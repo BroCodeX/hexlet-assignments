@@ -18,13 +18,11 @@ class App {
                     return acc;
                 }, Integer::sum);
     }
-//public static int getCountOfFreeEmails(List<String> emails) {
-//    List<String> freeDomains = List.of("gmail.com", "yandex.ru", "hotmail.com");
-//    long result = emails.stream()
+//public static long getCountOfFreeEmails(List<String> emails) {
+//    return emails.stream()
 //            .map(x -> x.split("@"))
-//            .filter(x -> freeDomains.contains(x[1]))
+//            .filter(x -> FREE_DOMAINS.contains(x[1]))
 //            .count();
-//    return (int) result;
 //}
 }
 // END
