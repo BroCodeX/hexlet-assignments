@@ -21,7 +21,7 @@ class App {
 }
 
 @FunctionalInterface
-interface MatchesCount <T> {
+interface MatchesCount <T extends String> {
     int apply (Map<T, T> map, T whereKey, T whereValue);
 }
 //END
