@@ -6,13 +6,13 @@ import java.util.stream.Collectors;
 
 // BEGIN
 class App {
+    private static final List<String> FREE_DOMAINS = List.of("gmail.com", "yandex.ru", "hotmail.com");
     public static int getCountOfFreeEmails(List<String> emails) {
-        List<String> freeDomains = List.of("gmail.com", "yandex.ru", "hotmail.com");
+
         return emails.stream()
                 .map(x -> x.split("@"))
-                //.filter(x -> freeDomains.contains(x[1]))
                 .reduce(0, (acc, x) -> {
-                    if (freeDomains.contains(x[1])) {
+                    if (FREE_DOMAINS.contains(x[1])) {
                         acc += 1;
                     }
                     return acc;
