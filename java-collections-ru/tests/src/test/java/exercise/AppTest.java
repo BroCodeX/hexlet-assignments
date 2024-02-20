@@ -15,6 +15,11 @@ class AppTest {
         List<Integer> actual1 = App.take(numbers1, 2);
         List<Integer> expected = List.of(1, 2);
         assertThat(actual1).isEqualTo(expected);
+
+        List<Integer> numbers11 = new ArrayList<>(Arrays.asList(1, 2, 3, 4));
+        List<Integer> actual11 = App.take(numbers11, 10);
+        List<Integer> expected11 = List.of(1, 2, 3, 4);
+        assertThat(actual11).isEqualTo(expected11);
         // END
     }
 
@@ -41,9 +46,9 @@ class AppTest {
     @Test
     void testTake4() {
         // BEGIN
-        List<Integer> numbers3 = new ArrayList<>(List.of());
+        List<Integer> numbers3 = new ArrayList<>();
         List<Integer> actual3 = App.take(numbers3, 3);
-        List<Integer> expected3 = List.of();
+        List<Integer> expected3 = new ArrayList<>();
         assertThat(actual3).isEqualTo(expected3);
         // END
     }
