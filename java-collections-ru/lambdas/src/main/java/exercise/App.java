@@ -1,17 +1,16 @@
 package exercise;
 
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 
 // BEGIN
 class App {
     public static String[][] enlargeArrayImage(String[][] arr) {
         var result = Arrays.stream(arr)
-                .flatMap(Arrays::stream)
-                .map(symbol -> {
-                    String[][] temp = new String[][] {{symbol, symbol},{symbol, symbol}};
-                    return temp;
-                })
-                .flatMap(Arrays::stream)
+                .map(row -> List.of(row, row))
+                .flatMap(List::stream)
+//                .flatMap(Arrays::stream)
                 .toArray(String[][]::new);
         return result;
     }
