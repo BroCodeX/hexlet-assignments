@@ -13,20 +13,13 @@ class App {
         List<String> listContent = Arrays.asList(splitContent);
         return listContent.stream()
                 .filter(line -> !line.isEmpty())
-                .filter(line -> line.startsWith("environment") && line.contains("X_FORWARDED_"))
-                .map(line -> line.replaceAll(" ", "")
-                        .replaceAll("\"", ""))
-                .map(line -> line.split("X_FORWARDED_"))
+                .filter(line -> line.startsWith("environment=") && line.contains("X_FORWARDED_"))
+                .map(line -> line.replaceAll("environment=", ""))
+                .map(line -> line.replaceAll("\"", ""))
+                .map(line -> line.split(","))
                 .flatMap(Arrays::stream)
-                .filter(line -> !line.contains("environment"))
-                .map(variable -> {
-                    int indexOfDot = variable.indexOf(",");
-                    if (indexOfDot == -1) {
-                        return variable;
-                    } else {
-                        return variable.substring(0, indexOfDot);
-                    }
-                })
+                .filter(kv -> kv.startsWith("X_FORWARDED_"))
+                .map(kv -> kv.replaceAll("X_FORWARDED_", ""))
                 .collect(Collectors.joining(","));
     }
 }
