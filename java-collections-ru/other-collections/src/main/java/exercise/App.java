@@ -12,14 +12,11 @@ class App {
             String temp = "";
             if (!data1.containsKey(word) && data2.containsKey(word)) {
                 temp = "added";
-            }
-            if (data1.containsKey(word) && !data2.containsKey(word)) {
+            } else if (data1.containsKey(word) && !data2.containsKey(word)) {
                 temp = "deleted";
-            }
-            if ((data1.containsKey(word) && data2.containsKey(word)) && !(data1.get(word)).equals(data2.get(word))) {
+            } else if ((data1.containsKey(word) && data2.containsKey(word)) && !(data1.get(word)).equals(data2.get(word))) {
                 temp = "changed";
-            }
-            if ((data1.containsKey(word) && data2.containsKey(word)) && (data1.get(word)).equals(data2.get(word))) {
+            } else if ((data1.containsKey(word) && data2.containsKey(word)) && (data1.get(word)).equals(data2.get(word))) {
                 temp = "unchanged";
             }
             return temp;
