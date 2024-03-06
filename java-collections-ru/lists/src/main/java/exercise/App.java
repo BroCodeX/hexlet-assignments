@@ -1,29 +1,38 @@
 package exercise;
 
-import java.util.Arrays;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 // BEGIN
 class App {
     public static boolean scrabble(String symbols, String word) {
-        boolean result = false;
-        ArrayList<String> symbolsChars = new ArrayList<>(symbols.length());
-        String[] symbolsArr = symbols.toLowerCase().split("");
-        symbolsChars.addAll(Arrays.asList(symbolsArr));
-        ArrayList<String> wordChars = new ArrayList<>(symbols.length());
-        String[] wordArr = word.toLowerCase().split("");
-        wordChars.addAll(Arrays.asList(wordArr));
-        for (String c: wordChars) {
-            int index = symbolsChars.indexOf(c);
-            if (index == -1) {
+        if (symbols.isEmpty() || word.isEmpty()) {
+            return false;
+        }
+
+        Map<String, Integer> symbolsMap = new HashMap<>();
+        List<String> symbolsList = new ArrayList<>();
+        String[] symbolsChars = symbols.toLowerCase().split("");
+        symbolsList.addAll(Arrays.asList(symbolsChars));
+
+        Map<String, Integer> wordMap = new HashMap<>();
+        List<String> wordList = new ArrayList<>();
+        String[] wordChars = word.toLowerCase().split("");
+        wordList.addAll(Arrays.asList(wordChars));
+
+        symbolsList.forEach(symbol -> symbolsMap.compute(symbol, (k, v) -> v == null ? 1 : v + 1));
+        wordList.forEach(w -> wordMap.compute(w, (k, v) -> v == null ? 1 : v + 1));
+//
+//        System.out.println(wordMap);
+//        System.out.println(symbolsMap);
+
+        for (Map.Entry<String, Integer> item: wordMap.entrySet()) {
+            String key = item.getKey();
+            int value = item.getValue();
+            if (!symbolsMap.containsKey(key) || symbolsMap.get(key) < value) {
                 return false;
-            } else {
-                symbolsChars.remove(index);
-                result = true;
             }
         }
-        return result;
+        return true;
     }
 }
 //END
