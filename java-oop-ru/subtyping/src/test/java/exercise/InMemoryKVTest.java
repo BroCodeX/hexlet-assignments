@@ -26,21 +26,21 @@ class InMemoryKVTest {
 
     }
 
-//    @Test
-//    void mustBeImmutableTest() {
-//        Map<String, String> initial = new HashMap<>();
-//        initial.put("key", "10");
-//
-//        Map<String, String> clonedInitial = new HashMap<>();
-//        clonedInitial.putAll(initial);
-//
-//        KeyValueStorage storage = new InMemoryKV(initial);
-//
-//        initial.put("key2", "value2");
-//        assertThat(storage.toMap()).isEqualTo(clonedInitial);
-//
-//        Map<String, String> map = storage.toMap();
-//        map.put("key2", "value2");
-//        assertThat(storage.toMap()).isEqualTo(clonedInitial);
-//    }
+    @Test
+    void mustBeImmutableTest() {
+        Map<String, String> initial = new HashMap<>();
+        initial.put("key", "10");
+
+        Map<String, String> clonedInitial = new HashMap<>();
+        clonedInitial.putAll(initial);
+
+        KeyValueStorage storage = new InMemoryKV(initial);
+
+        initial.put("key2", "value2");
+        assertThat(storage.toMap()).isEqualTo(clonedInitial);
+
+        Map<String, String> map = storage.toMap();
+        map.put("key2", "value2");
+        assertThat(storage.toMap()).isEqualTo(clonedInitial);
+    }
 }
