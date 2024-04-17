@@ -19,6 +19,12 @@ public abstract class Tag {
         return this.tag;
     }
 
+    public String collectText() {
+        return this.attributes.entrySet().stream()
+                .map(entry -> String.format(" %s=\"%s\"",entry.getKey(), entry.getValue()))
+                .collect(Collectors.joining(""));
+    }
+
     public Map<String, String> getaAttributes() {
         return this.attributes;
     }

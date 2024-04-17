@@ -16,9 +16,7 @@ class SingleTag extends Tag {
         if (attributes.isEmpty()) {
             return String.format("<%s>", tag);
         }
-        return this.attributes.entrySet().stream()
-                .map(entry -> String.format("%s=\"%s\"",entry.getKey(), entry.getValue()))
-                .collect(Collectors.joining(" ", String.format("<" + this.tag + " "), ">"));
+        return String.format("<%s%s>", tag, collectText());
     }
 }
 // END
