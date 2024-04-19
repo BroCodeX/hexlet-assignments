@@ -24,13 +24,13 @@ final class Car {
     @SneakyThrows
     public String serialize() {
         ObjectMapper mapper = new ObjectMapper();
-        return mapper.writeValueAsString(this) + mapper.writeValueAsString(owner);
+        return mapper.writeValueAsString(this);
     }
 
     @SneakyThrows
     public static Car unserialize(String json) {
         ObjectMapper mapper = new ObjectMapper();
-        return mapper.readValue(json, new TypeReference<>(){});
+        return mapper.readValue(json, Car.class);
     }
     // END
 }
