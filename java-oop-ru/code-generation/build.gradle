@@ -1,0 +1,32 @@
+plugins {
+  id 'java'
+  id 'com.adarshr.test-logger' version '2.1.1'
+  id("io.freefair.lombok") version "8.4"
+}
+
+repositories {
+  mavenCentral()
+}
+
+dependencies {
+  testImplementation("org.junit.jupiter:junit-jupiter-api:5.10.2")
+  testImplementation("org.junit.jupiter:junit-jupiter")
+
+  testImplementation("org.assertj:assertj-core:3.25.3")
+
+  implementation 'com.fasterxml.jackson.core:jackson-core:2.8.8'
+  implementation 'com.fasterxml.jackson.core:jackson-annotations:2.8.8'
+  implementation 'com.fasterxml.jackson.core:jackson-databind:2.16.1'
+}
+
+test {
+  useJUnitPlatform()
+}
+
+testlogger {
+  showStandardStreams = true
+}
+
+tasks.withType(JavaCompile) {
+  options.encoding = "UTF-8"
+}
