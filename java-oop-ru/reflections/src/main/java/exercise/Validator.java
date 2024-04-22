@@ -8,40 +8,39 @@ import java.util.Map;
 
 // BEGIN
 class Validator {
-    public static List<String> validate(Address adress) {
-        List<String> nullFields = new ArrayList<>();
-        Field[] fields = adress.getClass().getDeclaredFields();
-        try {
-            for (Field field : fields) {
-                field.setAccessible(true);
-                if (field.isAnnotationPresent(NotNull.class)) {
-                    if (field.get(adress) == null) {
-                        nullFields.add(field.getName());
+    public static List<String> validate(Object inastance) {
+        List<Field> fields = List.of(inastance.getClass().getDeclaredFields());
+        return fields.stream()
+                .filter(field -> field.isAnnotationPresent(NotNull.class))
+                .filter(field -> {
+                    Object nullCheck;
+                    try {
+                        field.setAccessible(true);
+                        nullCheck = field.get(inastance);
+                    } catch (IllegalAccessException e) {
+                        throw new RuntimeException(e);
                     }
-                }
-            }
-        } catch (IllegalAccessException e) {
-            throw new RuntimeException(e);
-        }
-
-        return nullFields;
+                    return nullCheck == null;
+                })
+                .map(Field::getName)
+                .toList();
     }
 
-    public static Map<String, List<String>> advancedValidate(Address adress) {
+    public static Map<String, List<String>> advancedValidate(Object inastance) {
         Map<String, List<String>> result = new HashMap<>();
-        Field[] fields = adress.getClass().getDeclaredFields();
+        Field[] fields = inastance.getClass().getDeclaredFields();
         try {
             for (Field field : fields) {
                 field.setAccessible(true);
                 if (field.isAnnotationPresent(NotNull.class) && field.isAnnotationPresent(MinLength.class)) {
-                    if (field.get(adress) == null) {
+                    if (field.get(inastance) == null) {
                         result.put(field.getName(), List.of("can not be null"));
-                    } else if (field.get(adress).toString().length() <
+                    } else if (field.get(inastance).toString().length() <
                             field.getAnnotation(MinLength.class).minLength()) {
                         result.put(field.getName(), List.of("length less than 4"));
                     }
                 } else if(field.isAnnotationPresent(NotNull.class) && !field.isAnnotationPresent(MinLength.class)) {
-                    if (field.get(adress) == null) {
+                    if (field.get(inastance) == null) {
                         result.put(field.getName(), List.of("can not be null"));
                     }
                 }
