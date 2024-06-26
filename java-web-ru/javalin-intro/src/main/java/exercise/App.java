@@ -9,8 +9,7 @@ public final class App {
     public static Javalin getApp() {
 
         // BEGIN
-        Javalin app = Javalin.create(config -> config.bundledPlugins.enableDevLogging());
-        return app;
+        return Javalin.create(config -> config.bundledPlugins.enableDevLogging());
         // END
     }
 
