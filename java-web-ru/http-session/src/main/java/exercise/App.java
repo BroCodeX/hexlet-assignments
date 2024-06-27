@@ -15,20 +15,17 @@ public final class App {
         });
 
         // BEGIN
-//        app.get("/users", ctx -> {
-//            ctx.json(USERS.subList(0, 5));
-//        });
         app.get("/users", ctx -> {
             var page = ctx.queryParamAsClass("page", Integer.class);
             var per = ctx.queryParamAsClass("per", Integer.class);
             int anwPage = page.getOrDefault(1);
-            int anwPer = per.getOrDefault(1);
+            int anwPer = per.getOrDefault(5);
             if (anwPage > 1) {
                 int start = (anwPage - 1) * anwPer;
                 int finish = (anwPage - 1) * anwPer + anwPer;
                 ctx.json(USERS.subList(start, finish));
             } else {
-                ctx.json(USERS.subList(0, 5));
+                ctx.json(USERS.subList(anwPage - 1, anwPer));
             }
         });
         // END
