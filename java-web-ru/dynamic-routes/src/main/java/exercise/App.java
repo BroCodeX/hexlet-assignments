@@ -34,7 +34,7 @@ public final class App {
         app.get("/companies/{id}", ctx -> {
             String id = ctx.pathParamAsClass("id", String.class).getOrDefault(null);
             var result = COMPANIES.stream()
-                    .filter(map -> map.get("id").equals(id))
+                    .filter(map -> map.containsKey("id") && map.get("id").equals(id))
                     .findFirst()
                     .orElseThrow(() -> new NotFoundResponse("Company not found"));
             ctx.json(result);
