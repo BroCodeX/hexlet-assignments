@@ -1,6 +1,8 @@
 package exercise;
 
 import io.javalin.Javalin;
+import io.javalin.http.NotFoundResponse;
+
 import java.util.List;
 import java.util.Map;
 import java.util.NoSuchElementException;
@@ -31,14 +33,11 @@ public final class App {
 
         app.get("/companies/{id}", ctx -> {
             String id = ctx.pathParamAsClass("id", String.class).getOrDefault(null);
-            if (!isKeyPresent(id) || id == null) {
-                ctx.status(404);
-                ctx.result("Company not found");
-            } else {
-                ctx.json(COMPANIES.stream()
-                        .filter(map -> map.get("id").equals(id))
-                        .findFirst().orElseThrow(RuntimeException::new));
-            }
+            var result = COMPANIES.stream()
+                    .filter(map -> map.get("id").equals(id))
+                    .findFirst()
+                    .orElseThrow(() -> new NotFoundResponse("Company not found"));
+            ctx.json(result);
         });
         // END
 
