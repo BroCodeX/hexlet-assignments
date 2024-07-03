@@ -28,15 +28,15 @@ public final class App {
             String term = context.queryParamAsClass("term", String.class).getOrDefault("");
             List<User> filtredUsers = new ArrayList<>();
             if (term != null && !term.isEmpty()) {
-                filtredUsers.addAll(USERS.stream()
+                filtredUsers = USERS.stream()
                         .filter(item -> {
                             String name = item.getFirstName();
                             return StringUtils.startsWithIgnoreCase(name, term);
                         })
-                        .toList());
+                        .toList();
 
             } else {
-                filtredUsers.addAll(USERS);
+                filtredUsers = USERS;
             }
             UsersPage usersPage = new UsersPage(filtredUsers, term);
             context.render("users/index.jte", model("usersPage", usersPage));
