@@ -41,7 +41,7 @@ public final class App {
             try {
                 String title = context.formParamAsClass("title", String.class)
                         .check(item -> item.trim().length() >= 2, "Название не должно быть короче двух символов")
-                        .check(App::isUnique, "Статья с таким названием уже существует")
+                        .check(item -> !ArticleRepository.existsByTitle(item), "Статья с таким названием уже существует")
                         .get().trim();
                 String content = context.formParamAsClass("content", String.class)
                         .check(item -> item.length() >= 10, "Статья должна быть не короче 10 символов")
@@ -53,7 +53,7 @@ public final class App {
                 String title = context.formParam("title").trim();
                 String content = context.formParam("content").trim();
                 BuildArticlePage page = new BuildArticlePage(title, content, ex.getErrors());
-                context.status(422).render("articles/build.jte", model("page", page));
+                context.render("articles/build.jte", model("page", page)).status(422);
             }
         });
         // END
@@ -64,10 +64,5 @@ public final class App {
     public static void main(String[] args) {
         Javalin app = getApp();
         app.start(7070);
-    }
-
-    public static boolean isUnique(String title) {
-        return ArticleRepository.getEntities().stream()
-                .noneMatch(article -> article.getTitle().equals(title.trim()));
     }
 }
