@@ -60,18 +60,14 @@ public class PostsController {
     // BEGIN
     public static void edit(Context ctx) {
         var id = ctx.pathParamAsClass("id", Long.class).get();
-        if (PostRepository.find(id).isEmpty()) {
-            throw new NotFoundResponse("This id has not found");
-        } else {
-            EditPostPage page = new EditPostPage();
-            page.setId(id);
-            ctx.render("posts/edit.jte", model("page", page));
-        }
+        var post = PostRepository.find(id)
+                .orElseThrow(() -> new NotFoundResponse("Post not found"));
+        EditPostPage page = new EditPostPage(post.getId(), post.getName(), post.getBody(), null);
+        ctx.render("posts/edit.jte", model("page", page));
 
     }
 
     public static void update(Context ctx) {
-        //var id = ctx.formParamAsClass("id", Long.class).get();
         var id = ctx.pathParamAsClass("id", Long.class).get();
 
         try {
@@ -83,13 +79,11 @@ public class PostsController {
                     .check(value -> value.length() >= 10, "Пост должен быть не короче 10 символов")
                     .get();
 
-            //var post = PostRepository.find(id).orElseThrow(() -> new NotFoundResponse("This id has not found"));
-            var post = PostRepository.find(id).get();
+            var post = PostRepository.find(id)
+                    .orElseThrow(() -> new NotFoundResponse("This id has not found"));
+
             post.setName(name);
             post.setBody(body);
-
-//            var post = new Post(name, body);
-//            PostRepository.save(post);
             ctx.redirect(NamedRoutes.postsPath());
 
         } catch (ValidationException e) {
