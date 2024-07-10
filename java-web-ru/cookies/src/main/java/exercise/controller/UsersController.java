@@ -39,13 +39,14 @@ public class UsersController {
         var user = UserRepository.find(id)
                 .orElseThrow(() -> new NotFoundResponse("There is no User with this id"));
         String cookie = context.cookie("user");
-        boolean isValid = user.getToken().equals(cookie);
         UserPage page = new UserPage(user);
-        if (isValid) {
-            context.render("users/show.jte", model("page", page));
-        } else {
+        if (user == null || !user.getToken().equals(cookie)) {
             context.redirect(NamedRoutes.buildUserPath());
+
+        } else {
+            context.render("users/show.jte", model("page", page));
         }
+
     }
     // END
 }
