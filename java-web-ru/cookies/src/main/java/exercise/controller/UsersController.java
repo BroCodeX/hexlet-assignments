@@ -23,7 +23,6 @@ public class UsersController {
         String lastName = context.formParamAsClass("lastName", String.class).get();
         String email = context.formParamAsClass("email", String.class).get();
         String password = context.formParamAsClass("password", String.class).get();
-        String cookie = context.cookie("user");
         String token = Security.generateToken();
         context.cookie("user", token);
         User user = new User(firstName, lastName, email, password, token);
@@ -38,7 +37,7 @@ public class UsersController {
     public static void show(Context context) {
         Long id = context.pathParamAsClass("id", Long.class).get();
         var user = UserRepository.find(id)
-                .orElseThrow(() -> new NotFoundResponse("There is no User with this name"));
+                .orElseThrow(() -> new NotFoundResponse("There is no User with this id"));
         String cookie = context.cookie("user");
         boolean isValid = user.getToken().equals(cookie);
         UserPage page = new UserPage(user);
