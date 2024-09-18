@@ -1,6 +1,5 @@
 package exercise;
 
-import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
 
@@ -29,6 +28,7 @@ public class Application {
         return users.stream()
                 .filter(user -> usersInfo.getAdmins().contains(user.getEmail()))
                 .map(User::getName)
+                .sorted()
                 .toList();
     }
     // END
