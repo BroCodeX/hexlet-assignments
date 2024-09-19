@@ -50,6 +50,7 @@ public class ProductsController {
                 new ResourceNotFoundException("Product with id " + id + " not found"));
         maybeProduct.setPrice(data.getPrice());
         maybeProduct.setTitle(data.getTitle());
+        productRepository.save(maybeProduct);
         return maybeProduct;
     }
 
