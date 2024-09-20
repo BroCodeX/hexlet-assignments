@@ -54,8 +54,7 @@ public class TasksController {
         var curTask = taskRepository.findById(id).get();
         curTask.setDescription(data.getDescription());
         curTask.setTitle(data.getTitle());
-        curTask.setUpdatedAt(data.getUpdatedAt());
-        return curTask;
+        return taskRepository.save(curTask);
     }
     // END
 
