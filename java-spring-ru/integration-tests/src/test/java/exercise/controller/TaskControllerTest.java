@@ -83,7 +83,7 @@ class ApplicationTest {
                 .andReturn();
         var body = result.getResponse().getContentAsString();
         Task savedTask = taskRepository.findByTitle(task.getTitle()).get();
-//        assertThat(taskRepository.existsById(savedTask.getId())).isTrue();
+        assertThat(savedTask).isNotNull();
         assertThatJson(body).and(
                 a -> a.node("title").isEqualTo(task.getTitle()),
                 a -> a.node("description").isEqualTo(task.getDescription()));
@@ -110,6 +110,8 @@ class ApplicationTest {
 
         assertThatJson(body)
                 .node("title").isEqualTo("Counter Strike 2");
+
+        assertThat(taskRepository.findById(testRepoTask.getId()).get().getTitle()).isEqualTo(data.get("title"));
 
     }
 
