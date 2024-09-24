@@ -18,11 +18,10 @@ public class GuestCreateDTO {
     @Email
     private String email;
 
-    @Size(min = 11, max = 13)
     @Pattern(regexp = "^\\+[0-9]{11,13}$")
     private String phoneNumber;
 
-    @Size(min = 4, max = 4)
+    @Pattern(regexp = "\\d{4}")
     private String clubCard;
 
     @FutureOrPresent
