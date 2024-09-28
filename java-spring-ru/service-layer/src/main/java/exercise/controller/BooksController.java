@@ -17,7 +17,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
-import jakarta.validation.Valid;
 
 @RestController
 @RequestMapping("/books")
@@ -30,7 +29,7 @@ public class BooksController {
     @GetMapping("")
     @ResponseStatus(HttpStatus.OK)
     public List<BookDTO> index() {
-        return bookService.getAll();
+        return bookService.getAllBooks();
     }
 
     @GetMapping("/{id}")
@@ -42,19 +41,19 @@ public class BooksController {
     @PostMapping("")
     @ResponseStatus(HttpStatus.CREATED)
     public BookDTO create(@RequestBody BookCreateDTO dto) {
-        return bookService.create(dto);
+        return bookService.createBook(dto);
     }
 
     @PutMapping("/{id}")
     @ResponseStatus(HttpStatus.OK)
     public BookDTO update(@RequestBody BookUpdateDTO dto, @PathVariable Long id) {
-        return bookService.update(dto, id);
+        return bookService.updateBook(dto, id);
     }
 
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void delete(@PathVariable long id) {
-        bookService.delete(id);
+        bookService.deleteBook(id);
     }
     // END
 }

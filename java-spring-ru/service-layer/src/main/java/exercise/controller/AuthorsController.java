@@ -4,7 +4,6 @@ import exercise.dto.AuthorDTO;
 import exercise.dto.AuthorCreateDTO;
 import exercise.dto.AuthorUpdateDTO;
 import exercise.service.AuthorService;
-import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -30,7 +29,7 @@ public class AuthorsController {
     @GetMapping("")
     @ResponseStatus(HttpStatus.OK)
     public List<AuthorDTO> index() {
-        return authorService.getAll();
+        return authorService.getAllAuthors();
     }
 
 
@@ -44,19 +43,19 @@ public class AuthorsController {
     @PostMapping("")
     @ResponseStatus(HttpStatus.CREATED)
     public AuthorDTO create(@RequestBody AuthorCreateDTO dto) {
-        return authorService.create(dto);
+        return authorService.createAuthor(dto);
     }
 
     @PutMapping("/{id}")
     @ResponseStatus(HttpStatus.OK)
     public AuthorDTO update(@RequestBody AuthorUpdateDTO dto, @PathVariable Long id) {
-        return authorService.update(dto, id);
+        return authorService.updateAuthor(dto, id);
     }
 
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void destroy(@PathVariable long id) {
-        authorService.delete(id);
+        authorService.deleteAuthor(id);
     }
     // END
 }

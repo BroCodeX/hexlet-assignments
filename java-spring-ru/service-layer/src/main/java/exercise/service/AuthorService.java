@@ -26,20 +26,20 @@ public class AuthorService {
         return mapper.map(maybeAuthor);
     }
 
-    public List<AuthorDTO> getAll() {
+    public List<AuthorDTO> getAllAuthors() {
         var authors = authorRepository.findAll();
         return authors.stream()
                 .map(mapper::map)
                 .toList();
     }
 
-    public AuthorDTO create(AuthorCreateDTO dto) {
+    public AuthorDTO createAuthor(AuthorCreateDTO dto) {
         var author = mapper.map(dto);
         authorRepository.save(author);
         return mapper.map(author);
     }
 
-    public AuthorDTO update(AuthorUpdateDTO dto, Long id) {
+    public AuthorDTO updateAuthor(AuthorUpdateDTO dto, Long id) {
         var author = authorRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("This author is not found"));
         mapper.update(dto, author);
@@ -47,7 +47,7 @@ public class AuthorService {
         return mapper.map(author);
     }
 
-    public void delete(Long id) {
+    public void deleteAuthor(Long id) {
         authorRepository.deleteById(id);
     }
     // END

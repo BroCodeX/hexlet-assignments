@@ -26,20 +26,20 @@ public class BookService {
         return mapper.map(maybeBook);
     }
 
-    public List<BookDTO> getAll() {
+    public List<BookDTO> getAllBooks() {
         var books = bookRepository.findAll();
         return books.stream()
                 .map(mapper::map)
                 .toList();
     }
 
-    public BookDTO create(BookCreateDTO dto) {
+    public BookDTO createBook(BookCreateDTO dto) {
         var book = mapper.map(dto);
         bookRepository.save(book);
         return mapper.map(book);
     }
 
-    public BookDTO update(BookUpdateDTO dto, Long id) {
+    public BookDTO updateBook(BookUpdateDTO dto, Long id) {
         var book = bookRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("This book is not found"));
         mapper.update(dto, book);
@@ -47,7 +47,7 @@ public class BookService {
         return mapper.map(book);
     }
 
-    public void delete(Long id) {
+    public void deleteBook(Long id) {
         bookRepository.deleteById(id);
     }
     // END
