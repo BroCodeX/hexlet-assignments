@@ -2,6 +2,7 @@ package exercise;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
 class App {
@@ -18,7 +19,9 @@ class App {
         Map<String, Integer> result = new HashMap<>();
 
         MinThread minThread = new MinThread(numbers);
+        LOGGER.info("Thread " + minThread.getName() + " started");
         MaxThread maxThread = new MaxThread(numbers);
+        LOGGER.info("Thread " + maxThread.getName() + " started");
 
         maxThread.start();
         minThread.start();
@@ -26,6 +29,8 @@ class App {
         try {
             minThread.join();
             maxThread.join();
+            LOGGER.info("Thread " + minThread.getName() + " finished");
+            LOGGER.info("Thread " + minThread.getName() + " finished");
         } catch (InterruptedException e) {
             LOGGER.info("Thread interrupted: " + e.getMessage());
         }
