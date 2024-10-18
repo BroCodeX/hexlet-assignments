@@ -17,20 +17,24 @@ class App {
         Path targetPath = Paths.get(target).toAbsolutePath().normalize();
 
         CompletableFuture<String> future1 = CompletableFuture.supplyAsync(() -> {
+            String result = "";
             try {
-                return Files.readString(sourcePath1).replaceAll("\\n", "");
+                result = Files.readString(sourcePath1).replaceAll("\\n", "");
             } catch (Exception ex) {
-                throw new RuntimeException("NoSuchFileException: " + ex);
+                throw new RuntimeException(ex);
             }
-        }).exceptionally(Throwable::getMessage);
+            return result;
+        });
 
         CompletableFuture<String> future2 = CompletableFuture.supplyAsync(() -> {
+            String result = "";
             try {
-                return Files.readString(sourcePath2).replaceAll("\\n", "");
+                result = Files.readString(sourcePath2).replaceAll("\\n", "");
             } catch (Exception ex) {
-                throw new RuntimeException("NoSuchFileException: " + ex);
+                throw new RuntimeException(ex);
             }
-        }).exceptionally(Throwable::getMessage);
+            return result;
+        });
 
         return future1.thenCombine(future2, (cont1, cont2) -> {
             String concated = String.join(" ", cont1, cont2);
@@ -38,9 +42,12 @@ class App {
                 Files.writeString(targetPath, concated);
                 return concated;
             } catch (Exception ex) {
-                throw new RuntimeException("Error writing to file " + ex);
+                throw new RuntimeException(ex);
             }
-        }).exceptionally(Throwable::getMessage);
+        }).exceptionally(ex -> {
+            System.out.println("Oops! We have an exception - " + ex.getMessage());
+            return "Unknown!";
+        });
     }
     // END
 
