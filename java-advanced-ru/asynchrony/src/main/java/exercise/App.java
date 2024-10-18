@@ -1,12 +1,9 @@
 package exercise;
 
+import java.nio.file.*;
 import java.util.concurrent.CompletableFuture;
 import java.util.Arrays;
-import java.nio.file.Paths;
-import java.nio.file.Path;
-import java.nio.file.Files;
 import java.io.File;
-import java.nio.file.StandardOpenOption;
 import java.util.concurrent.ExecutionException;
 
 class App {
@@ -61,7 +58,18 @@ class App {
 
     public static CompletableFuture<Long> getDirectorySize(String dirAddress) {
         return CompletableFuture.supplyAsync(() -> {
-
+            try {
+                Path path = Paths.get(dirAddress).toAbsolutePath().normalize();
+                long resultSize = 0;
+                var dirStream = Files.newDirectoryStream(path);
+                for (Path p : dirStream) {
+                    long tempSize = Files.size(p);
+                    resultSize += tempSize;
+                }
+                return resultSize;
+            } catch (Exception ex) {
+                throw new RuntimeException("Ошибка при чтении директории " + dirAddress, ex);
+            }
         });
     }
 }
