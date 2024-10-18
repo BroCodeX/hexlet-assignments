@@ -4,11 +4,14 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import static org.assertj.core.api.Assertions.assertThat;
 import static com.github.stefanbirkner.systemlambda.SystemLambda.tapSystemOut;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
 import java.util.concurrent.CompletableFuture;
 
 import java.nio.file.Paths;
 import java.nio.file.Path;
 import java.nio.file.Files;
+import java.util.concurrent.ExecutionException;
 
 class AppTest {
     private String destPath;
@@ -46,6 +49,13 @@ class AppTest {
     }
 
     // BEGIN
-    
+    @Test
+    public void directorySize() throws ExecutionException, InterruptedException {
+        CompletableFuture<Long> result = App.getDirectorySize("src/main/resources/");
+        long actual = result.get();
+
+        long expected = 23;
+        assertEquals(expected, actual);
+    }
     // END
 }

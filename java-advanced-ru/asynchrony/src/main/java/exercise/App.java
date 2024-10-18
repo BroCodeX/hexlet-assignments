@@ -1,5 +1,6 @@
 package exercise;
 
+import java.io.IOException;
 import java.nio.file.*;
 import java.util.concurrent.CompletableFuture;
 import java.util.Arrays;
@@ -19,19 +20,17 @@ class App {
             try {
                 return Files.readString(sourcePath1).replaceAll("\\n", "");
             } catch (Exception ex) {
-                throw new RuntimeException("Ошибка при чтении файла " + sourcePath1, ex);
+                throw new RuntimeException("NoSuchFileException: " + ex);
             }
-        });
-        future1.get();
+        }).exceptionally(Throwable::getMessage);
 
         CompletableFuture<String> future2 = CompletableFuture.supplyAsync(() -> {
             try {
                 return Files.readString(sourcePath2).replaceAll("\\n", "");
             } catch (Exception ex) {
-                throw new RuntimeException("Ошибка при чтении файла " + sourcePath2, ex);
+                throw new RuntimeException("NoSuchFileException: " + ex);
             }
-        });
-        future2.get();
+        }).exceptionally(Throwable::getMessage);
 
         return future1.thenCombine(future2, (cont1, cont2) -> {
             String concated = String.join(" ", cont1, cont2);
@@ -39,9 +38,9 @@ class App {
                 Files.writeString(targetPath, concated);
                 return concated;
             } catch (Exception ex) {
-                throw new RuntimeException("Ошибка при записи в файл " + targetPath, ex);
+                throw new RuntimeException("Error writing to file " + ex);
             }
-        });
+        }).exceptionally(Throwable::getMessage);
     }
     // END
 
@@ -68,7 +67,7 @@ class App {
                 }
                 return resultSize;
             } catch (Exception ex) {
-                throw new RuntimeException("Ошибка при чтении директории " + dirAddress, ex);
+                throw new RuntimeException("Ошибка при чтении директории " + ex.getMessage());
             }
         });
     }
