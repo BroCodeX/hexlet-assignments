@@ -18,8 +18,6 @@ RUN mv gradle-${GRADLE_VERSION} ${GRADLE_HOME}
 
 ENV PATH=$PATH:$GRADLE_HOME/bin
 
-RUN gradle build
-
 EXPOSE 3000
 
-CMD ["java", "-jar", "build/libs/docker.jar"]
+CMD ["gradle", "bootRun"]
