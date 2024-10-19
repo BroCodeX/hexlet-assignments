@@ -25,7 +25,8 @@ import org.testcontainers.containers.PostgreSQLContainer;
 @AutoConfigureMockMvc
 
 // BEGIN
-
+@Testcontainers
+@Transactional
 // END
 public class AppTest {
 
