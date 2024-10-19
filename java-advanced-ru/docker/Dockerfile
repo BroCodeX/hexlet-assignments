@@ -1,8 +1,8 @@
 FROM eclipse-temurin:20-jdk
 
-WORKDIR /proj
+WORKDIR /app
 
-COPY . .
+COPY ./app .
 
 ARG GRADLE_VERSION=8.2
 
