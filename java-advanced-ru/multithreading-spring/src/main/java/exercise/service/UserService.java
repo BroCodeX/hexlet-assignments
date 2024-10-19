@@ -29,12 +29,8 @@ public class UserService {
     }
 
     public Mono<User> update(User userData, long id) {
-        return userRepository.findById(id).flatMap(user -> {
-            user.setEmail(userData.getEmail());
-            user.setFirstName(userData.getFirstName());
-            user.setLastName(userData.getLastName());
-            return userRepository.save(user);
-        });
+        userData.setId(id);
+        return userRepository.save(userData);
     }
 
     public Mono<Void> delete(long id) {
