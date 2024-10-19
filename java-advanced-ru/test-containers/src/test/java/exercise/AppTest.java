@@ -23,48 +23,29 @@ import org.testcontainers.containers.PostgreSQLContainer;
 
 @SpringBootTest
 @AutoConfigureMockMvc
-@Testcontainers
-@Transactional
+
+// BEGIN
+
+// END
 public class AppTest {
 
     @Autowired
     private MockMvc mockMvc;
 
+    // BEGIN
     @Container
-    public static PostgreSQLContainer<?> postgreSQLContainer = new PostgreSQLContainer<>("postgres:latest")
-            .withDatabaseName("testdb")
-            .withUsername("testuser")
-            .withPassword("testpassword")
+    private static PostgreSQLContainer<?> database = new PostgreSQLContainer<>("postgres")
+            .withDatabaseName("hexlet")
+            .withUsername("sa")
+            .withPassword("sa")
             .withInitScript("init.sql");
 
     @DynamicPropertySource
-    static void postgresqlProperties(DynamicPropertyRegistry registry) {
-        registry.add("spring.datasource.url", postgreSQLContainer::getJdbcUrl);
-        registry.add("spring.datasource.username", postgreSQLContainer::getUsername);
-        registry.add("spring.datasource.password", postgreSQLContainer::getPassword);
-    }
+    public static void properties(DynamicPropertyRegistry registry) {
+        registry.add("spring.datasource.url", database::getJdbcUrl);
+        registry.add("spring.datasource.username", database::getUsername);
+        registry.add("spring.datasource.password", database::getPassword);
 
-    @Test
-    void testCreatePerson() throws Exception {
-        MockHttpServletResponse responsePost = mockMvc
-                .perform(
-                        post("/people")
-                                .contentType(MediaType.APPLICATION_JSON)
-                                .content("{\"firstName\": \"Jackson\", \"lastName\": \"Bind\"}")
-                )
-                .andReturn()
-                .getResponse();
-
-        assertThat(responsePost.getStatus()).isEqualTo(200);
-
-        MockHttpServletResponse response = mockMvc
-                .perform(get("/people"))
-                .andReturn()
-                .getResponse();
-
-        assertThat(response.getStatus()).isEqualTo(200);
-        assertThat(response.getContentType()).isEqualTo(MediaType.APPLICATION_JSON.toString());
-        assertThat(response.getContentAsString()).contains("Jackson", "Bind");
     }
 
     @Test
@@ -76,23 +57,12 @@ public class AppTest {
 
         assertThat(response.getStatus()).isEqualTo(200);
         assertThat(response.getContentType()).isEqualTo(MediaType.APPLICATION_JSON.toString());
+        assertThat(response.getContentAsString()).contains("John", "Smith");
+        assertThat(response.getContentAsString()).contains("Jack", "Doe");
     }
 
     @Test
     void testGetPerson() throws Exception {
-        // Создаем пользователя для теста
-        MockHttpServletResponse responsePost = mockMvc
-                .perform(
-                        post("/people")
-                                .contentType(MediaType.APPLICATION_JSON)
-                                .content("{\"firstName\": \"John\", \"lastName\": \"Doe\"}")
-                )
-                .andReturn()
-                .getResponse();
-
-        assertThat(responsePost.getStatus()).isEqualTo(200);
-
-        // Получаем созданного пользователя
         MockHttpServletResponse response = mockMvc
                 .perform(get("/people/1"))
                 .andReturn()
@@ -100,76 +70,74 @@ public class AppTest {
 
         assertThat(response.getStatus()).isEqualTo(200);
         assertThat(response.getContentType()).isEqualTo(MediaType.APPLICATION_JSON.toString());
-        assertThat(response.getContentAsString()).contains("John", "Doe");
+        assertThat(response.getContentAsString()).contains("John", "Smith");
     }
 
     @Test
     void testUpdatePerson() throws Exception {
-        // Создаем пользователя для теста
+
         MockHttpServletResponse responsePost = mockMvc
                 .perform(
-                        post("/people")
+                        patch("/people/1")
                                 .contentType(MediaType.APPLICATION_JSON)
-                                .content("{\"firstName\": \"John\", \"lastName\": \"Doe\"}")
+                                .content("{\"firstName\": \"Will\", \"lastName\": \"Walker\"}")
                 )
                 .andReturn()
                 .getResponse();
 
         assertThat(responsePost.getStatus()).isEqualTo(200);
 
-        // Обновляем пользователя
-        MockHttpServletResponse responsePatch = mockMvc
-                .perform(
-                        patch("/people/1")
-                                .contentType(MediaType.APPLICATION_JSON)
-                                .content("{\"firstName\": \"Jane\", \"lastName\": \"Doe\"}")
-                )
-                .andReturn()
-                .getResponse();
-
-        assertThat(responsePatch.getStatus()).isEqualTo(200);
-
-        // Проверяем, что пользователь обновлен
         MockHttpServletResponse response = mockMvc
-                .perform(get("/people/1"))
+                .perform(get("/people"))
                 .andReturn()
                 .getResponse();
 
         assertThat(response.getStatus()).isEqualTo(200);
         assertThat(response.getContentType()).isEqualTo(MediaType.APPLICATION_JSON.toString());
-        assertThat(response.getContentAsString()).contains("Jane", "Doe");
+        assertThat(response.getContentAsString()).contains("Will", "Walker");
+        assertThat(response.getContentAsString()).doesNotContain("John", "Smith");
     }
 
     @Test
     void testDeletePerson() throws Exception {
-        // Создаем пользователя для теста
         MockHttpServletResponse responsePost = mockMvc
-                .perform(
-                        post("/people")
-                                .contentType(MediaType.APPLICATION_JSON)
-                                .content("{\"firstName\": \"John\", \"lastName\": \"Doe\"}")
-                )
+                .perform(delete("/people/1"))
                 .andReturn()
                 .getResponse();
 
         assertThat(responsePost.getStatus()).isEqualTo(200);
 
-        // Удаляем пользователя
-        MockHttpServletResponse responseDelete = mockMvc
-                .perform(
-                        delete("/people/1")
-                )
-                .andReturn()
-                .getResponse();
-
-        assertThat(responseDelete.getStatus()).isEqualTo(200);
-
-        // Проверяем, что пользователь удален
         MockHttpServletResponse response = mockMvc
-                .perform(get("/people/1"))
+                .perform(get("/people"))
                 .andReturn()
                 .getResponse();
 
-        assertThat(response.getStatus()).isEqualTo(404);
+        assertThat(response.getStatus()).isEqualTo(200);
+        assertThat(response.getContentType()).isEqualTo(MediaType.APPLICATION_JSON.toString());
+        assertThat(response.getContentAsString()).doesNotContain("John", "Smith");
+    }
+    // END
+
+    @Test
+    void testCreatePerson() throws Exception {
+        MockHttpServletResponse responsePost = mockMvc
+            .perform(
+                post("/people")
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .content("{\"firstName\": \"Jackson\", \"lastName\": \"Bind\"}")
+            )
+            .andReturn()
+            .getResponse();
+
+        assertThat(responsePost.getStatus()).isEqualTo(200);
+
+        MockHttpServletResponse response = mockMvc
+            .perform(get("/people"))
+            .andReturn()
+            .getResponse();
+
+        assertThat(response.getStatus()).isEqualTo(200);
+        assertThat(response.getContentType()).isEqualTo(MediaType.APPLICATION_JSON.toString());
+        assertThat(response.getContentAsString()).contains("Jackson", "Bind");
     }
 }
